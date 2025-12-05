@@ -237,7 +237,7 @@ export default function TambahHafalanForm({ santriList }) {
 
   // 🔍 FILTERING DATA
   const filteredData = useMemo(() => {
-    return hafalanList.filter((h) => {
+    return hafalanList?.filter((h) => {
       const santri = santriList.find((s) => s.id === h.santri_id);
 
       const matchSearch =
@@ -711,7 +711,7 @@ export default function TambahHafalanForm({ santriList }) {
       {/* Info hasil filter */}
       {(search || filterKelas || filterJenis) && (
         <div className="text-sm text-gray-600 bg-blue-50 px-4 py-2 rounded border border-blue-200">
-          Menampilkan {filteredData.length} dari {hafalanList.length} data
+          Menampilkan {filteredData?.length} dari {hafalanList.length} data
           {search && ` • Pencarian: "${search}"`}
           {filterKelas && ` • Kelas: ${filterKelas}`}
           {filterJenis && ` • Jenis: ${filterJenis}`}
@@ -1131,7 +1131,7 @@ export default function TambahHafalanForm({ santriList }) {
         handleDelete={handleDelete}
         getSantriName={getSantriName}
       />
-      {!loading && hafalanList.length > 0 && (
+      {!loading && hafalanList?.length > 0 && (
         <Pagination
           currentPage={currentPage}
           totalPages={pagination.totalPages}

@@ -40,7 +40,7 @@ export async function GET(request) {
 
       const countResult = await prisma.$queryRaw`
         SELECT COUNT(DISTINCT santri_id) as total
-        FROM HafalanSantri
+        FROM "HafalanSantri"
         WHERE guru_id = ${Number(guru_id)}
       `;
       totalCount = Number(countResult[0].total);
@@ -54,7 +54,7 @@ export async function GET(request) {
               PARTITION BY h.santri_id 
               ORDER BY h.created_at DESC, h.id DESC
             ) AS rn
-          FROM HafalanSantri h
+          FROM "HafalanSantri" h
           WHERE h.guru_id = ${Number(guru_id)}
         ) AS x
         WHERE x.rn = 1
@@ -118,13 +118,13 @@ export async function GET(request) {
 
       const rawData = await prisma.$queryRaw`
         SELECT h1.*
-        FROM HafalanSantri h1
+        FROM "HafalanSantri" h1
         INNER JOIN Santri s ON h1.santri_id = s.id
         INNER JOIN (
           SELECT 
             h2.santri_id, 
             MAX(h2.tanggal) as max_tanggal
-          FROM HafalanSantri h2
+          FROM "HafalanSantri" h2
           INNER JOIN Santri s2 ON h2.santri_id = s2.id
           WHERE s2.walisantri_id = ${Number(walisantri_id)}
           GROUP BY h2.santri_id
@@ -174,16 +174,16 @@ export async function GET(request) {
     else if (session.user.role === "ADMIN") {
       const countResult = await prisma.$queryRaw`
         SELECT COUNT(DISTINCT santri_id) as total
-        FROM HafalanSantri
+        FROM "HafalanSantri"
       `;
       totalCount = Number(countResult[0].total);
 
       const rawData = await prisma.$queryRaw`
         SELECT h1.*
-        FROM HafalanSantri h1
+        FROM "HafalanSantri" h1
         INNER JOIN (
           SELECT santri_id, MAX(tanggal) as max_tanggal
-          FROM HafalanSantri
+          FROM "HafalanSantri"
           GROUP BY santri_id
         ) h2 ON h1.santri_id = h2.santri_id 
              AND h1.tanggal = h2.max_tanggal

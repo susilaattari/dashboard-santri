@@ -1,9 +1,3 @@
-// utils/juzCalculator.js
-
-/**
- * Data lengkap 30 Juz Al-Qur'an
- * Berisi informasi halaman, surat, dan ayat untuk setiap juz
- */
 export const JUZ_DATA = [
   {
     juz: 1,
@@ -416,7 +410,7 @@ export function validateHafalanInJuz(
  * FUNGSI LAMA - Hitung total juz yang telah dihafal santri (DEPRECATED)
  * Gunakan calculateJuzProgressEnhanced untuk fitur terbaru
  */
-export function calculateJuzProgress(hafalanList) {
+export const calculateJuzProgress = (hafalanList) => {
   const validHafalan = hafalanList.filter(
     (h) => h.status === "LULUS" && h.jenis === "ZIYADAH"
   );
@@ -502,12 +496,12 @@ export function calculateJuzProgress(hafalanList) {
     lastHafalan:
       validHafalan.length > 0 ? validHafalan[validHafalan.length - 1] : null,
   };
-}
+};
 
 /**
  * FUNGSI LAMA - Get statistik hafalan per juz (DEPRECATED)
  */
-export function getJuzStatistics(hafalanList) {
+export const getJuzStatistics = (hafalanList) => {
   const progress = calculateJuzProgress(hafalanList);
 
   const statistics = {
@@ -543,7 +537,7 @@ export function getJuzStatistics(hafalanList) {
   });
 
   return statistics;
-}
+};
 
 // ============================================
 // FUNGSI BARU - ENHANCED VERSION

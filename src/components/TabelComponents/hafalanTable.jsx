@@ -56,7 +56,7 @@ const HafalanTable = ({
           </thead>
 
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredData.length === 0 ? (
+            {filteredData?.length === 0 ? (
               <tr>
                 <td colSpan="9" className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center justify-center">
@@ -87,7 +87,7 @@ const HafalanTable = ({
                 </td>
               </tr>
             ) : (
-              filteredData.map((h, index) => (
+              filteredData?.map((h, index) => (
                 <tr
                   key={h.id}
                   className={`hover:bg-gray-50 transition-colors ${
@@ -448,12 +448,12 @@ const HafalanTable = ({
       </div>
 
       {/* Pagination info */}
-      {filteredData.length > 0 && (
+      {filteredData?.length > 0 && (
         <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700">
               Menampilkan{" "}
-              <span className="font-medium">{filteredData.length}</span> dari{" "}
+              <span className="font-medium">{filteredData?.length}</span> dari{" "}
               <span className="font-medium">{hafalanList.length}</span> data
             </div>
           </div>
