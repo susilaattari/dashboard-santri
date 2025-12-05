@@ -583,7 +583,7 @@ export function getAffectedJuz(halamanAwal, halamanAkhir) {
 /**
  * ENHANCED - Hitung progress juz berdasarkan halaman_awal dan halaman_akhir
  */
-export function calculateJuzProgressEnhanced(hafalanList) {
+export const calculateJuzProgressEnhanced = (hafalanList) => {
   const validHafalan = hafalanList.filter(
     (h) => h.status === "LULUS" && h.jenis === "ZIYADAH"
   );
@@ -697,12 +697,12 @@ export function calculateJuzProgressEnhanced(hafalanList) {
     lastHafalan:
       validHafalan.length > 0 ? validHafalan[validHafalan.length - 1] : null,
   };
-}
+};
 
 /**
  * ENHANCED - Get statistik hafalan per juz dengan informasi lengkap
  */
-export function getJuzStatisticsEnhanced(hafalanList) {
+export const getJuzStatisticsEnhanced = (hafalanList) => {
   const progress = calculateJuzProgressEnhanced(hafalanList);
 
   const statistics = {
@@ -735,7 +735,7 @@ export function getJuzStatisticsEnhanced(hafalanList) {
   });
 
   return statistics;
-}
+};
 
 /**
  * Validasi range halaman untuk hafalan baru
