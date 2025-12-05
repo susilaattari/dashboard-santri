@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
+  role       Role     @default(WALISANTRI)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  walisantri Walisantri?
+  guru       Guru?
+}
+
+enum Role {
+  ADMIN
+  WALISANTRI
+  GURU
+}
+
+model Walisantri {
+  id         Int      @id @default(autoincrement())
+  user_id    Int      @unique
+  nama       String
+  alamat     String   @db.Text
+  no_hp      String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user   User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  santri Santri[]
+}
+
+model Guru {
+  id         Int      @id @default(autoincrement())
+  user_id    Int      @unique
+  nama       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  user    User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  hafalan HafalanSantri[]
+  santri  Santri[]
+  history_hafalan HistoryHafalan[]  // Tambahkan ini
+  
+}
+
+model Santri {
+  id            Int      @id @default(autoincrement())
+  nama          String
+  tanggal_lahir DateTime
+  kelas         String
+
+  guru_id    Int   @default(1)
+  guru    Guru? @relation(fields: [guru_id], references: [id])
+
+
+  walisantri_id Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  walisantri Walisantri      @relation(fields: [walisantri_id], references: [id], onDelete: Cascade)
+  hafalan    HafalanSantri[]
+  history       HistoryHafalan[]
+}
+
+model HistoryHafalan {
+  id            Int      @id @default(autoincrement())
+  hafalan_id    Int
+  santri_id     Int
+  tanggal       DateTime
+  surah         String?
+  jenis         String
+  juz           Int?
+  ayat_mulai    Int?
+  ayat_selesai  Int?
+  halaman_awal   Int?
+  halaman_akhir  Int?
+  status        String
+  catatan       String?  @db.Text
+  guru_id       Int
+  created_at    DateTime @default(now())
+
+  santri        Santri @relation(fields: [santri_id], references: [id], onDelete: Cascade)
+  hafalan       HafalanSantri @relation(fields: [hafalan_id], references: [id], onDelete: Cascade)
+  guru          Guru          @relation(fields: [guru_id], references: [id])
+
+  @@index([hafalan_id])
+  @@index([santri_id])
+  @@index([guru_id])
+  @@map("history_hafalan")
+}
+
+model HafalanSantri {
+  id           Int              @id @default(autoincrement())
+  santri_id    Int
+  guru_id      Int              @default(1)
+
+  halaman_awal  Int?
+  halaman_akhir Int?
+  juz           Int?
+  tanggal      DateTime
+  jenis        JenisHafalan
+  surah        String
+  ayat_mulai   Int
+  ayat_selesai Int
+  catatan      String?          @db.Text
+  status       Status
+  created_at   DateTime         @default(now())
+  updated_at   DateTime         @default(now()) @updatedAt
+
+  history       HistoryHafalan[]
+  santri        Santri @relation(fields: [santri_id], references: [id], onDelete: Cascade)
+  guru          Guru   @relation(fields: [guru_id], references: [id], onDelete: Cascade)
+}
+
+
+enum JenisHafalan {
+  ZIYADAH
+  MUROJA
+  TASMI
+}
+
+enum Status {
+  LULUS
+  MENGULANG
+  BELUM_HAFALAN
+}
