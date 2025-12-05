@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import {
   calculateJuzProgressEnhanced,
   getJuzStatisticsEnhanced,
-} from "@/utils/juzCalculation"; // Pastikan nama file sesuai
+} from "@/utils/juzcalculation"; // Pastikan nama file sesuai
 
 export async function GET(req, { params }) {
   const { id } = params;

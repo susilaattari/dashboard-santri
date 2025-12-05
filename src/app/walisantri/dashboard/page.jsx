@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
-import { calculateJuzProgressEnhanced } from "@/utils/juzCalculation";
+import { calculateJuzProgressEnhanced } from "../../../utils/juzcalculation";
 import WalisantriDashboard from "./WalisantriDashboard";
 
 export default async function WalisantriDashboardPage() {

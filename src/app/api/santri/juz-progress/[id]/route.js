@@ -1,6 +1,9 @@
 // pages/api/santri/[id]/juz-progress.js
 import prisma from "@/lib/prisma";
-import { calculateJuzProgress, getJuzStatistics } from "@/utils/juzCalculator";
+import {
+  calculateJuzProgress,
+  getJuzStatistics,
+} from "../../../../../utils/juzcalculation";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {

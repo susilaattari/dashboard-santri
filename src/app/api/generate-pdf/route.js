@@ -1,7 +1,7 @@
 // app/api/generate-pdf/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { calculateJuzProgressEnhanced } from "@/utils/juzCalculation";
+import { calculateJuzProgressEnhanced } from "../../../utils/juzcalculation";
 
 // Untuk generate PDF, kita akan menggunakan library puppeteer atau jsPDF
 // Install dengan: npm install jspdf jspdf-autotable
