@@ -78,8 +78,7 @@ export async function GET(request, { params }) {
     return new Response(
       JSON.stringify({
         error: "Terjadi kesalahan",
-        detail:
-          process.env.NODE_ENV === "development" ? error.message : undefined,
+        detail: error.message,
       }),
       {
         status: 500,
@@ -234,8 +233,7 @@ export async function PUT(request, { params }) {
     return new Response(
       JSON.stringify({
         error: "Terjadi kesalahan",
-        detail:
-          process.env.NODE_ENV === "development" ? error.message : undefined,
+        detail: error.message,
       }),
       {
         status: 500,
@@ -312,8 +310,7 @@ export async function DELETE(request, { params }) {
     return new Response(
       JSON.stringify({
         error: "Terjadi kesalahan",
-        detail:
-          process.env.NODE_ENV === "development" ? error.message : undefined,
+        detail: error.message,
       }),
       {
         status: 500,
