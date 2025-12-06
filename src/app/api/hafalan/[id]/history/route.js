@@ -12,7 +12,7 @@ export async function GET(request, { params }) {
     const { id } = params;
 
     // Cek apakah hafalan ada
-    const hafalan = await prisma.hafalanSantri.findUnique({
+    const hafalan = await prisma.HafalanSantri.findUnique({
       where: { id: Number(id) },
     });
 

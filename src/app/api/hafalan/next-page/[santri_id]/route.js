@@ -21,7 +21,7 @@ export async function GET(request, { params }) {
     const { santri_id } = params;
 
     // Ambil hafalan LULUS dan ZIYADAH
-    const hafalan = await prisma.hafalanSantri.findMany({
+    const hafalan = await prisma.HafalanSantri.findMany({
       where: {
         santri_id: Number(santri_id),
         status: "LULUS",

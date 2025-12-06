@@ -309,7 +309,7 @@ export async function POST(request) {
     }
 
     // Cek apakah santri sudah punya hafalan pertama
-    const existingHafalan = await prisma.hafalanSantri.findFirst({
+    const existingHafalan = await prisma.HafalanSantri.findFirst({
       where: { santri_id: Number(santri_id) },
     });
 
@@ -336,7 +336,7 @@ export async function POST(request) {
     // ============================
     // SAVE DATA
     // ============================
-    const data = await prisma.hafalanSantri.create({
+    const data = await prisma.HafalanSantri.create({
       data: {
         tanggal: new Date(tanggal),
         surah,

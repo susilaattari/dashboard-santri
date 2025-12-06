@@ -22,29 +22,51 @@ export default function Sidebar({ children, session }) {
 
   // MENU UNTUK GURU
   const menuGuru = [
-    { name: "Dashboard", icon: LayoutDashboard, href: "/" },
-    { name: "Data Hafalan", icon: BookOpen, href: "/guru/dashboard" },
-    { name: "Progress Hafalan", icon: BookCheck, href: "/summary" },
+    { name: "Dashboard", icon: LayoutDashboard, href: "/", last: true },
+    {
+      name: "Data Hafalan",
+      icon: BookOpen,
+      href: "/guru/dashboard",
+      last: true,
+    },
+    {
+      name: "Progress Hafalan",
+      icon: BookCheck,
+      href: "/summary",
+      last: false,
+    },
   ];
 
   // MENU UNTUK WALISANTRI
   const menuWali = [
-    { name: "Dashboard", icon: LayoutDashboard, href: "/" },
+    { name: "Dashboard", icon: LayoutDashboard, href: "/", last: true },
     {
       name: "Data Hafalan Anak",
       icon: BookOpen,
       href: "/walisantri/dashboard",
+      last: false,
     },
   ];
 
   // MENU UNTUK ADMIN
   const menuAdmin = [
-    { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
-    { name: "Tambah Santri", icon: UserPlus, href: "/dashboard/tambah-santri" },
-    { name: "Tambah Akun", icon: UserPlus, href: "/register" },
-    { name: "Data Guru", icon: GraduationCap, href: "/admin/guru" },
-    { name: "Data Santri", icon: UsersRound, href: "/admin/santri" },
-    { name: "Kelola Hafalan", icon: ClipboardList, href: "/admin/hafalan" },
+    { name: "Dashboard", icon: LayoutDashboard, href: "/", last: true },
+    {
+      name: "Tambah Santri",
+      icon: UserPlus,
+      href: "/dashboard/tambah-santri",
+      last: true,
+    },
+    { name: "Tambah Akun", icon: UserPlus, href: "/register", last: true },
+    // { name: "Data Guru", icon: GraduationCap, href: "/admin/guru" },
+    // { name: "Data Santri", icon: UsersRound, href: "/admin/santri" },
+    // { name: "Kelola Hafalan", icon: ClipboardList, href: "/admin/hafalan" },
+    {
+      name: "Progress Hafalan",
+      icon: BookCheck,
+      href: "/summary",
+      last: false,
+    },
   ];
 
   // Pilih menu berdasarkan role
@@ -83,6 +105,8 @@ export default function Sidebar({ children, session }) {
           <h2 className="text-xl font-bold text-slate-900">
             {session?.role === "WALISANTRI"
               ? "Wali Santri Panel"
+              : session?.role === "ADMIN"
+              ? "Kordinator Panel"
               : "Guru Panel"}
           </h2>
 
@@ -104,7 +128,9 @@ export default function Sidebar({ children, session }) {
               <a
                 key={item.name}
                 href={item.href}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 font-medium"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 font-medium ${
+                  item.last ? "border-b border-slate-200/50" : ""
+                }`}
               >
                 <Icon size={20} />
                 <span>{item.name}</span>

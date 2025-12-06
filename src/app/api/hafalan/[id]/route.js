@@ -16,7 +16,7 @@ export async function GET(request, { params }) {
 
     const { id } = params;
 
-    const hafalan = await prisma.hafalanSantri.findUnique({
+    const hafalan = await prisma.HafalanSantri.findUnique({
       where: { id: Number(id) },
       include: {
         santri: {
@@ -118,7 +118,7 @@ export async function PUT(request, { params }) {
     const { id } = params;
 
     // Cek apakah hafalan ada
-    const existingHafalan = await prisma.hafalanSantri.findUnique({
+    const existingHafalan = await prisma.HafalanSantri.findUnique({
       where: { id: Number(id) },
     });
 
@@ -190,7 +190,7 @@ export async function PUT(request, { params }) {
       });
 
       // 2. Update data hafalan dengan data baru
-      const updatedHafalan = await tx.hafalanSantri.update({
+      const updatedHafalan = await tx.HafalanSantri.update({
         where: { id: Number(id) },
         data: {
           tanggal: new Date(tanggal),
@@ -271,7 +271,7 @@ export async function DELETE(request, { params }) {
     }
 
     // Cek apakah data ada dan milik guru yang login
-    const existingHafalan = await prisma.hafalanSantri.findUnique({
+    const existingHafalan = await prisma.HafalanSantri.findUnique({
       where: { id: Number(id) },
     });
 
@@ -293,7 +293,7 @@ export async function DELETE(request, { params }) {
     }
 
     // Hapus data
-    await prisma.hafalanSantri.delete({
+    await prisma.HafalanSantri.delete({
       where: { id: Number(id) },
     });
 

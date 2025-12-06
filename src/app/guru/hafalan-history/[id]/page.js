@@ -18,7 +18,7 @@ export default async function HistoryHafalanPage({ params, searchParams }) {
   console.log("Hafalan ID:", id);
 
   // Ambil data hafalan utama
-  const hafalan = await prisma.hafalanSantri.findUnique({
+  const hafalan = await prisma.HafalanSantri.findUnique({
     where: { id: Number(id) },
     include: {
       santri: {

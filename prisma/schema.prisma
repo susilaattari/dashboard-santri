@@ -121,7 +121,7 @@ model HafalanSantri {
   history       HistoryHafalan[]
   santri        Santri @relation(fields: [santri_id], references: [id], onDelete: Cascade)
   guru          Guru   @relation(fields: [guru_id], references: [id], onDelete: Cascade)
-  @@map("hafalansantri")
+ 
 }
 
 

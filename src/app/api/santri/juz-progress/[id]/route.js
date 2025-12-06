@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     }
 
     // Ambil semua hafalan santri yang LULUS dan ZIYADAH
-    const hafalanList = await prisma.hafalanSantri.findMany({
+    const hafalanList = await prisma.HafalanSantri.findMany({
       where: {
         santri_id: parseInt(id),
         status: "LULUS",
