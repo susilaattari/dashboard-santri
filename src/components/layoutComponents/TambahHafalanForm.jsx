@@ -440,7 +440,7 @@ export default function TambahHafalanForm({ santriList }) {
     <div className="space-y-4">
       {/* MODERN PREMIUM ALERT */}
       {alert.show && (
-        <div className="fixed top-4 right-4 z-50 animate-slideInRight">
+        <div className="fixed bottom-5 right-4 z-50 animate-slideInRight">
           <div
             className={`min-w-[320px] max-w-md rounded-2xl shadow-2xl border-2 overflow-hidden transform transition-all duration-300 ${
               alert.type === "success"

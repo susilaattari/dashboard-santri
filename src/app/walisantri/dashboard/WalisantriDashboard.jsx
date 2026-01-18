@@ -352,7 +352,7 @@ export default function WalisantriDashboard({ initialData }) {
   const itemsPerPage = 6;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 px-6 py-10">
+    <div className="min-h-screen  px-6 py-10">
       {initialData.santri.map((santri) => {
         const currentPage = pageBySantri[santri.id] || 1;
         const totalPages = Math.ceil(santri.hafalan.length / itemsPerPage);

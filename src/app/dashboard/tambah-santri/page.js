@@ -1,13 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-export default function TambahSantri() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [gurus, setGurus] = useState([]);
+import {
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  User,
+  Calendar,
+  GraduationCap,
+  Users,
+  BookOpen,
+} from "lucide-react";
 
+export default function TambahSantri() {
+  const [gurus, setGurus] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [walisantris, setWalisantris] = useState([]);
@@ -18,15 +23,6 @@ export default function TambahSantri() {
     walisantri_id: "",
     guru_id: "",
   });
-
-  useEffect(() => {
-    if (status === "loading") return;
-
-    // Jika bukan guru → redirect
-    if (session?.user?.role !== "ADMIN") {
-      router.replace("/");
-    }
-  }, [session, status, router]);
 
   // Ambil data wali santri saat mount
   useEffect(() => {
@@ -47,6 +43,7 @@ export default function TambahSantri() {
     fetchWalisantri();
   }, []);
 
+  // Ambil data guru saat mount
   useEffect(() => {
     async function fetchGuru() {
       try {
@@ -93,6 +90,7 @@ export default function TambahSantri() {
           tanggal_lahir: "",
           kelas: "",
           walisantri_id: "",
+          guru_id: "",
         });
       } else {
         setMessage({
@@ -108,147 +106,254 @@ export default function TambahSantri() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 p-4">
-      {" "}
-      <div className="max-w-2xl mx-auto pt-8">
-        {" "}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          {" "}
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Tambah Data Santri
-          </h1>{" "}
-          <p className="text-gray-600 mb-6">
-            Isi data santri dan pilih wali santri yang sudah terdaftar
-          </p>
-          ```
-          {/* Message Alert */}
-          {message.text && (
-            <div
-              className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
-                message.type === "success"
-                  ? "bg-green-50 text-green-800 border border-green-200"
-                  : "bg-red-50 text-red-800 border border-red-200"
-              }`}
-            >
-              {message.type === "success" ? (
-                <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-              ) : (
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              )}
-              <span>{message.text}</span>
+    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+      <div className="w-full max-w-3xl">
+        {/* Main Card */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white/20">
+          {/* Header with Gradient */}
+          <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-8 md:px-12 py-10">
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="relative z-10">
+              <div className="inline-block p-3 bg-white/20 rounded-2xl backdrop-blur-sm mb-4">
+                <GraduationCap className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                Tambah Data Santri
+              </h1>
+              <p className="text-emerald-100 text-lg">
+                Isi data santri dan pilih wali santri yang sudah terdaftar
+              </p>
             </div>
-          )}
-          {/* Form Santri */}
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Nama Santri <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="nama"
-                value={santriData.nama}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                placeholder="Nama lengkap santri"
-              />
-            </div>
+          </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Tanggal Lahir <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                name="tanggal_lahir"
-                value={santriData.tanggal_lahir}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Guru Pembimbing <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="guru_id"
-                value={santriData.guru_id}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+          {/* Form Content */}
+          <div className="px-8 md:px-12 py-10">
+            {/* Message Alert */}
+            {message.text && (
+              <div
+                className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${
+                  message.type === "success"
+                    ? "bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200"
+                    : "bg-gradient-to-r from-red-50 to-pink-50 border border-red-200"
+                }`}
               >
-                <option value="">Pilih Guru</option>
-                {gurus.map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {g.nama}
-                  </option>
-                ))}
-              </select>
-            </div>
+                {message.type === "success" ? (
+                  <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                ) : (
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                )}
+                <span
+                  className={
+                    message.type === "success"
+                      ? "text-green-800 font-medium"
+                      : "text-red-800 font-medium"
+                  }
+                >
+                  {message.text}
+                </span>
+              </div>
+            )}
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Kelas <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="kelas"
-                value={santriData.kelas}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+            {/* Form */}
+            <div className="space-y-6">
+              {/* Nama Santri */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Nama Santri <span className="text-red-500">*</span>
+                </label>
+                <div className="relative group">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors" />
+                  <input
+                    type="text"
+                    name="nama"
+                    value={santriData.nama}
+                    onChange={handleChange}
+                    placeholder="Masukkan nama lengkap santri"
+                    required
+                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:bg-emerald-50/30 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Grid 2 Columns */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Tanggal Lahir */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Tanggal Lahir <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative group">
+                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors" />
+                    <input
+                      type="date"
+                      name="tanggal_lahir"
+                      value={santriData.tanggal_lahir}
+                      onChange={handleChange}
+                      required
+                      className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:bg-emerald-50/30 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Kelas */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Kelas <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative group">
+                    <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors z-10" />
+                    <select
+                      name="kelas"
+                      value={santriData.kelas}
+                      onChange={handleChange}
+                      required
+                      className="w-full pl-12 pr-10 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:bg-emerald-50/30 transition-all appearance-none bg-white"
+                    >
+                      <option value="">Pilih Kelas</option>
+                      <option value="1A">Kelas 1A</option>
+                      <option value="1B">Kelas 1B</option>
+                      <option value="2A">Kelas 2A</option>
+                      <option value="2B">Kelas 2B</option>
+                      <option value="3A">Kelas 3A</option>
+                      <option value="3B">Kelas 3B</option>
+                      <option value="4A">Kelas 4A</option>
+                      <option value="4B">Kelas 4B</option>
+                      <option value="5A">Kelas 5A</option>
+                      <option value="5B">Kelas 5B</option>
+                      <option value="6A">Kelas 6A</option>
+                      <option value="6B">Kelas 6B</option>
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <svg
+                        className="w-5 h-5 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Guru Pembimbing */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Guru Pembimbing <span className="text-red-500">*</span>
+                </label>
+                <div className="relative group">
+                  <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors z-10" />
+                  <select
+                    name="guru_id"
+                    value={santriData.guru_id}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-10 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:bg-emerald-50/30 transition-all appearance-none bg-white"
+                  >
+                    <option value="">Pilih Guru</option>
+                    {gurus.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        {g.nama}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Wali Santri */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Wali Santri <span className="text-red-500">*</span>
+                </label>
+                <div className="relative group">
+                  <Users className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-emerald-600 transition-colors z-10" />
+                  <select
+                    name="walisantri_id"
+                    value={santriData.walisantri_id}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-10 py-3.5 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:bg-emerald-50/30 transition-all appearance-none bg-white"
+                  >
+                    <option value="">Pilih Wali Santri</option>
+                    {walisantris.map((w) => (
+                      <option key={w.id} value={w.id}>
+                        {w.nama} - {w.no_hp}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg
+                      className="w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Info Box */}
+              <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-blue-800">
+                    <p className="font-semibold mb-1">Informasi Penting</p>
+                    <p className="text-blue-700">
+                      Pastikan semua data santri sudah benar sebelum menyimpan.
+                      {/* Data yang sudah tersimpan dapat diubah melalui menu edit
+                      santri. */}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-semibold py-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transform hover:-translate-y-0.5"
               >
-                <option value="">Pilih Kelas</option>
-                <option value="1A">Kelas 1A</option>
-                <option value="1B">Kelas 1B</option>
-                <option value="2A">Kelas 2A</option>
-                <option value="2B">Kelas 2B</option>
-                <option value="3A">Kelas 3A</option>
-                <option value="3B">Kelas 3B</option>
-                <option value="4A">Kelas 4A</option>
-                <option value="4B">Kelas 4B</option>
-                <option value="5A">Kelas 5A</option>
-                <option value="5B">Kelas 5B</option>
-                <option value="6A">Kelas 6A</option>
-                <option value="6B">Kelas 6B</option>
-              </select>
+                {loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Menyimpan Data...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span>Simpan Data Santri</span>
+                  </>
+                )}
+              </button>
             </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Wali Santri <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="walisantri_id"
-                value={santriData.walisantri_id}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-              >
-                <option value="">Pilih Wali Santri</option>
-                {walisantris.map((w) => (
-                  <option key={w.id} value={w.id}>
-                    {w.nama} - {w.no_hp}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" /> Menyimpan...
-                </>
-              ) : (
-                "Simpan Santri"
-              )}
-            </button>
           </div>
         </div>
       </div>

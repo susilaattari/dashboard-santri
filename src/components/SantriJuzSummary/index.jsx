@@ -201,12 +201,13 @@ const SantriJuzSummary = ({ initialData, role, userId }) => {
             <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold text-yellow-800 mb-1">
-                Perhatian: Belum Ada Data Hafalan
+                Perhatian: Belum Ada santri yang Memiliki Progress Hafalan 1 Juz
+                atau Lebih
               </p>
               <p className="text-sm text-yellow-700">
-                Semua santri belum memiliki data hafalan dengan status{" "}
-                <strong>LULUS</strong> dan jenis <strong>ZIYADAH</strong>.
-                Silakan input data hafalan terlebih dahulu.
+                Semua santri akan tercatat dengan status <strong>LULUS</strong>{" "}
+                dan jenis <strong>ZIYADAH</strong>. Data akan tercatat secara
+                otomatis saat hafalan selesai.
               </p>
             </div>
           </div>

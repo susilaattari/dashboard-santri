@@ -105,6 +105,7 @@ const HafalanTable = ({
                               santri_id: e.target.value,
                             })
                           }
+                          disabled
                           className="w-full border-2 border-gray-300 px-2 py-1.5 rounded-lg text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
                         >
                           {santriList.map((s) => (

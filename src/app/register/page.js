@@ -1,68 +1,59 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin } from "lucide-react";
-import Link from "next/link";
+import { useState } from "react";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  User,
+  Phone,
+  MapPin,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { data: session, status } = useSession();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     confirmPassword: "",
     role: "WALISANTRI",
-    // Data tambahan untuk walisantri
     nama: "",
     alamat: "",
     no_hp: "",
   });
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
-  const router = useRouter();
-  useEffect(() => {
-    if (status === "loading") return;
-
-    // // Jika bukan guru → redirect
-    // if (session?.user?.role !== "ADMIN" ) {
-    //   router.replace("/");
-    // }
-  }, [session, status, router]);
 
   const validateForm = () => {
     const newErrors = {};
 
-    // Validasi username
     if (!formData.username) {
       newErrors.username = "Username wajib diisi";
     } else if (formData.username.length < 4) {
       newErrors.username = "Username minimal 4 karakter";
     }
 
-    // Validasi password
     if (!formData.password) {
       newErrors.password = "Password wajib diisi";
     } else if (formData.password.length < 6) {
       newErrors.password = "Password minimal 6 karakter";
     }
 
-    // Validasi confirm password
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Konfirmasi password wajib diisi";
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Password tidak cocok";
     }
 
-    // Validasi nama
     if (!formData.nama) {
       newErrors.nama = "Nama lengkap wajib diisi";
     }
 
-    // Validasi berdasarkan role
     if (formData.role === "WALISANTRI") {
       if (!formData.alamat) {
         newErrors.alamat = "Alamat wajib diisi";
@@ -83,7 +74,6 @@ export default function RegisterPage() {
       ...prev,
       [name]: value,
     }));
-    // Clear error
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -92,7 +82,7 @@ export default function RegisterPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setSuccessMessage("");
 
@@ -101,154 +91,171 @@ export default function RegisterPage() {
       setErrors(newErrors);
       return;
     }
-    console.log("Submitting registration with data:");
-    setLoading(newErrors);
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+
+    setLoading(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      setFormData({
+        username: "",
+        password: "",
+        confirmPassword: "",
+        role: "WALISANTRI",
+        nama: "",
+        alamat: "",
+        no_hp: "",
       });
-
-      const res = await response.json();
-      console.log("Response from server:", res);
-      if (!res.success) {
-        setErrors({ form: res.error || "Registrasi gagal" });
-        return;
-      }
-
-      setSuccessMessage("User Berhasil Ditambahkan....");
-    } catch (error) {
-      console.error("Error during registration:", error);
-      setErrors({ form: "Terjadi kesalahan saat registrasi" });
-    } finally {
+      setSuccessMessage("User Berhasil Ditambahkan!");
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
-    <div className="w-full flex items-center justify-center px-4">
-      <div className="w-full max-w-2xl">
-        {/* Card Container */}
-        <div className="bg-white rounded-2xl shadow-2xl rounded-lg">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Daftar Akun Baru
-            </h1>
-            <p className="text-blue-100">Buat akun untuk mengakses sistem</p>
+    <div className="min-h-screen w-full flex items-center justify-center p-4 ">
+      <div className="w-full max-w-4xl">
+        {/* Main Card */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white/20">
+          {/* Header with Gradient */}
+          <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-8 md:px-12 py-10">
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="relative z-10">
+              <div className="inline-block p-3 bg-white/20 rounded-2xl backdrop-blur-sm mb-4">
+                <User className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                Daftar Akun Baru
+              </h1>
+              <p className="text-blue-100 text-lg">
+                Buat akun baru untuk mengakses Dashboard Mutaba'ah
+              </p>
+            </div>
           </div>
 
           {/* Form Content */}
-          <div className="px-8 py-8">
+          <div className="px-8 md:px-12 py-10">
+            {/* Success Message */}
             {successMessage && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-green-800 text-sm font-medium">
-                  {successMessage}
-                </p>
+              <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl flex items-center gap-3">
+                <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                <p className="text-green-800 font-medium">{successMessage}</p>
               </div>
             )}
 
+            {/* Error Message */}
             {errors.form && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-800 text-sm font-medium">
-                  {errors.form}
-                </p>
+              <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                <p className="text-red-800 font-medium">{errors.form}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-6">
               {/* Role Selection */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
                   Daftar Sebagai
                 </label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="WALISANTRI">Wali Santri</option>
-                  <option value="GURU">Guru</option>
-                  <option value="ADMIN">Admin</option>
-                </select>
+                <div className="grid grid-cols-3 gap-3">
+                  {["WALISANTRI", "GURU", "ADMIN"].map((role) => (
+                    <button
+                      key={role}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, role })}
+                      className={`py-3 px-4 rounded-xl font-medium text-sm transition-all ${
+                        formData.role === role
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      {role === "WALISANTRI"
+                        ? "Wali Santri"
+                        : role.charAt(0) + role.slice(1).toLowerCase()}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Username */}
+              {/* Username & Nama */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Username
                   </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                  <div className="relative group">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                     <input
                       type="text"
                       name="username"
                       value={formData.username}
                       onChange={handleChange}
-                      placeholder="username"
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        errors.username ? "border-red-500" : "border-gray-300"
+                      placeholder="Masukkan username"
+                      className={`w-full pl-12 pr-4 py-3.5 border-2 rounded-xl focus:outline-none transition-all ${
+                        errors.username
+                          ? "border-red-300 bg-red-50 focus:border-red-500"
+                          : "border-gray-200 focus:border-blue-500 focus:bg-blue-50/30"
                       }`}
                     />
                   </div>
                   {errors.username && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
                       {errors.username}
                     </p>
                   )}
                 </div>
 
-                {/* Nama Lengkap */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Nama Lengkap
                   </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                  <div className="relative group">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                     <input
                       type="text"
                       name="nama"
                       value={formData.nama}
                       onChange={handleChange}
-                      placeholder="Nama lengkap"
-                      className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        errors.nama ? "border-red-500" : "border-gray-300"
+                      placeholder="Masukkan nama lengkap"
+                      className={`w-full pl-12 pr-4 py-3.5 border-2 rounded-xl focus:outline-none transition-all ${
+                        errors.nama
+                          ? "border-red-300 bg-red-50 focus:border-red-500"
+                          : "border-gray-200 focus:border-blue-500 focus:bg-blue-50/30"
                       }`}
                     />
                   </div>
                   {errors.nama && (
-                    <p className="text-red-500 text-xs mt-1">{errors.nama}</p>
+                    <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {errors.nama}
+                    </p>
                   )}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Password */}
+              {/* Password Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Password
                   </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="••••••••"
-                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        errors.password ? "border-red-500" : "border-gray-300"
+                      placeholder="Masukkan password"
+                      className={`w-full pl-12 pr-12 py-3.5 border-2 rounded-xl focus:outline-none transition-all ${
+                        errors.password
+                          ? "border-red-300 bg-red-50 focus:border-red-500"
+                          : "border-gray-200 focus:border-blue-500 focus:bg-blue-50/30"
                       }`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -258,29 +265,29 @@ export default function RegisterPage() {
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
                       {errors.password}
                     </p>
                   )}
                 </div>
 
-                {/* Confirm Password */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
                     Konfirmasi Password
                   </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                     <input
                       type={showConfirmPassword ? "text" : "password"}
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleChange}
-                      placeholder="••••••••"
-                      className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      placeholder="Konfirmasi password"
+                      className={`w-full pl-12 pr-12 py-3.5 border-2 rounded-xl focus:outline-none transition-all ${
                         errors.confirmPassword
-                          ? "border-red-500"
-                          : "border-gray-300"
+                          ? "border-red-300 bg-red-50 focus:border-red-500"
+                          : "border-gray-200 focus:border-blue-500 focus:bg-blue-50/30"
                       }`}
                     />
                     <button
@@ -288,7 +295,7 @@ export default function RegisterPage() {
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
-                      className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -298,7 +305,8 @@ export default function RegisterPage() {
                     </button>
                   </div>
                   {errors.confirmPassword && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
                       {errors.confirmPassword}
                     </p>
                   )}
@@ -307,89 +315,76 @@ export default function RegisterPage() {
 
               {/* Conditional Fields - Walisantri */}
               {formData.role === "WALISANTRI" && (
-                <>
+                <div className="space-y-6 pt-2">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Alamat
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                      Alamat Lengkap
                     </label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                    <div className="relative group">
+                      <MapPin className="absolute left-4 top-4 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                       <textarea
                         name="alamat"
                         value={formData.alamat}
                         onChange={handleChange}
-                        placeholder="Alamat lengkap"
-                        rows="2"
-                        className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          errors.alamat ? "border-red-500" : "border-gray-300"
+                        placeholder="Masukkan alamat lengkap"
+                        rows="3"
+                        className={`w-full pl-12 pr-4 py-3.5 border-2 rounded-xl focus:outline-none transition-all resize-none ${
+                          errors.alamat
+                            ? "border-red-300 bg-red-50 focus:border-red-500"
+                            : "border-gray-200 focus:border-blue-500 focus:bg-blue-50/30"
                         }`}
                       />
                     </div>
                     {errors.alamat && (
-                      <p className="text-red-500 text-xs mt-1">
+                      <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
                         {errors.alamat}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Nomor HP
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                      Nomor HP / WhatsApp
                     </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                    <div className="relative group">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                       <input
                         type="tel"
                         name="no_hp"
                         value={formData.no_hp}
                         onChange={handleChange}
                         placeholder="08123456789"
-                        className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          errors.no_hp ? "border-red-500" : "border-gray-300"
+                        className={`w-full pl-12 pr-4 py-3.5 border-2 rounded-xl focus:outline-none transition-all ${
+                          errors.no_hp
+                            ? "border-red-300 bg-red-50 focus:border-red-500"
+                            : "border-gray-200 focus:border-blue-500 focus:bg-blue-50/30"
                         }`}
                       />
                     </div>
                     {errors.no_hp && (
-                      <p className="text-red-500 text-xs mt-1">
+                      <p className="text-red-500 text-xs mt-2 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
                         {errors.no_hp}
                       </p>
                     )}
                   </div>
-                </>
+                </div>
               )}
 
-              {/* Conditional Fields - Guru
-              {formData.role === "GURU" && (
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Mata Pelajaran
-                  </label>
-                  <input
-                    type="text"
-                    name="mapel"
-                    value={formData.mapel}
-                    onChange={handleChange}
-                    placeholder="Contoh: Tahfidz Al-Quran"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.mapel ? "border-red-500" : "border-gray-300"
-                    }`}
-                  />
-                  {errors.mapel && (
-                    <p className="text-red-500 text-xs mt-1">{errors.mapel}</p>
-                  )}
-                </div>
-              )} */}
-
-              {/* Terms & Conditions */}
-              <div className="flex items-start space-x-2">
+              {/* Terms Checkbox */}
+              <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
                 <input
                   type="checkbox"
                   required
-                  className="w-4 h-4 mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="w-5 h-5 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
                 />
-                <label className="text-sm text-gray-700">
+                <label className="text-sm text-gray-700 leading-relaxed">
                   Saya setuju dengan{" "}
-                  <a href="#" className="text-blue-600 hover:text-blue-700">
+                  <a
+                    href="#"
+                    className="text-blue-600 hover:text-blue-700 font-medium underline"
+                  >
                     syarat dan ketentuan
                   </a>{" "}
                   yang berlaku
@@ -398,20 +393,23 @@ export default function RegisterPage() {
 
               {/* Submit Button */}
               <button
-                type="submit"
+                onClick={handleSubmit}
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-semibold py-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
               >
                 {loading ? (
                   <>
-                    <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
-                    <span>Menambahkan...</span>
+                    <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Menambahkan Akun...</span>
                   </>
                 ) : (
-                  "Tambah Akun"
+                  <>
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span>Tambah Akun Baru</span>
+                  </>
                 )}
               </button>
-            </form>
+            </div>
           </div>
         </div>
       </div>

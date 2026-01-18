@@ -2,7 +2,7 @@
 import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
 import { LogOut, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SessionProvider } from "next-auth/react";
 
 export default function LayoutPage({ children, session }) {
@@ -11,13 +11,24 @@ export default function LayoutPage({ children, session }) {
   const isAuthPage = hiddenPages.includes(pathname);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (dropdownOpen && !e.target.closest(".dropdown-container")) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, [dropdownOpen]);
+
   return (
     <>
       <SessionProvider>
         {!isAuthPage ? (
           <div className="h-screen bg-slate-50 flex flex-col w-full overflow-hidden p-0">
             {/* === MODERN NAVBAR === */}
-            <nav className="bg-white border-b border-slate-200 shadow-sm flex-shrink-0 z-40">
+            <nav className="bg-white border-b border-slate-200 shadow-sm flex-shrink-0 z-[60] relative">
               <div className="max-w-full px-4 md:px-6 py-4">
                 <div className="flex justify-between items-center">
                   {/* Left: Logo/Title */}
@@ -41,7 +52,7 @@ export default function LayoutPage({ children, session }) {
                     </p>
 
                     {/* User Dropdown */}
-                    <div className="relative">
+                    <div className="relative z-50 dropdown-container">
                       <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
@@ -101,14 +112,12 @@ export default function LayoutPage({ children, session }) {
 
             {/* === SIDEBAR + CONTENT === */}
             {session ? (
-              // <div className="flex-1 overflow-hidden my-0 ">
               <Sidebar session={session}>
-                <div className="w-full h-full p-10 overflow-auto my-0 rounded-lg bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
-                  {children}
+                <div className="w-full h-full overflow-y-auto md:p-6 lg:p-10 p-1 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+                  <div className="min-h-full pb-28">{children}</div>
                 </div>
               </Sidebar>
             ) : (
-              // </div>
               <div className="flex-1 overflow-auto">{children}</div>
             )}
           </div>
